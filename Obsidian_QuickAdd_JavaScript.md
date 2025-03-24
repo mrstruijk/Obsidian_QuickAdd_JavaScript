@@ -1,8 +1,16 @@
-# Obsidian_QuickAdd_JavaScript
+---
+MOC:
+  - "[[MOC_Obsidian]]"
+related:
+  - "[[MOC_Coding_Personal]]"
+tags: []
+date_created: 2025-03-24
+date_modified: 2025-03-24
+---
 
 # Problem
 
-I kept creating dangling orphan sad-faced notes, and losing those all the time..
+I kept creating dangling orphan sad-faced notes, and losing those all the time.
 
 # Idea
 
@@ -10,11 +18,11 @@ I kept creating dangling orphan sad-faced notes, and losing those all the time..
 
 I want to instantiate a new note, and I want Obsidian to prompt me to link it to another note.
 
+Some notes [[QuickAdd_and_javascript]].
+
 ## More specifically
 
-__I want to create a new note, and I want to put links to other notes in the properties of the new note.__ I first learned about this in [No Boilerplate's Obsidian video](https://youtu.be/B0yAy2j-9V0?si=flXzJy_oplntQyHZ&t=450) [^1]. 
-[^1]: (The shown syntax is a little off: `[[` and `"` should be in reverse order, like this: `"[[linked_note_name]]"`).
-
+__I want to create a new note, and I want to put links to other notes in the properties of the new note.__ I first learned about this in [No Boilerplate's Obsidian video](https://youtu.be/B0yAy2j-9V0?si=flXzJy_oplntQyHZ&t=450) .[^1]
 I want to do 3 things:
 1. I want to create a new note.
 2. I want to be prompted to put a link to a 'vertical / higher' level note (called a 'MOC', for ['Map of Content'](https://youtu.be/gXvozu3I4K0?si=WJJTJmXIzFKDWIwk)), in the properties of the new note.
@@ -35,13 +43,15 @@ The template looks like this:
 1. The words (exact, inc capitalisation) of the properties 'MOC: ' and 'related: '. If you use other words, amend them as well in the corresponding 'Capture' sections later.
 2. _One blank line under each of these properties!_
 
-(When using [Linter](https://github.com/platers/obsidian-linter), make sure to disable automatic linting of this file / or all the files in the Templates folder).
+When using [Linter](https://github.com/platers/obsidian-linter), make sure to disable automatic linting of this file / or all the files in the Templates folder. An even better way is make sure that Linter doesn't auto-remove blank lines in the YAML:
+
+![[QuickAdd_13_Linting_YAML.png]]
 
 ## Script to get all the existing notes
 
-Stored somewhere in the Obsidian vault. Put it in a 'Scripts' folder for all I care. Save it with a useful name, ending in `.js`.
+Stored somewhere in the Obsidian vault. Put it in a 'Scripts' folder for all I care. Save it with a useful name, ending in `[[`.
 
-Mine is called `selectSourceFile.js`.
+Mine is called `"`.
 
 ``` javascript
 module.exports = async function(params) {
@@ -83,7 +93,7 @@ module.exports = async function(params) {
 
 This script will get all the notes in your vault, and display them as a dropdown list from which you can type / search / choose.
 
-Keep an eye out for the `params.variables` and then specifically the `selectedNote` part. That will be important later.
+Keep an eye out for the `"[[linked_note_name]]"` and then specifically the `.js` part. That will be important later.
 
 ## Setting it up
 
@@ -100,7 +110,7 @@ Exposing it here allows two things:
 2. The rest of Obsidian can use it.
 	1. It is always possible with Command Palette (Run QuickAdd > New_QuickAdd)
 	2. The yellow lightning bolt also makes it possible to assign a hotkey.
-	
+
 ![QuickAdd_1_Settings](https://gist.github.com/user-attachments/assets/d1fefd9e-5a51-4ada-882a-0caaa2aec881)
 
 The exposed New_QuickAdd is using the macro New_QuickAdd.
@@ -117,11 +127,11 @@ Our macro also uses two other macros (Select_MOC and Select_Related). The latter
 
 ![QuickAdd_3_NewQuickAdd_details](https://gist.github.com/user-attachments/assets/38e03912-fb8f-4da1-93fe-d67debd516a7)
 
-The New_File creates a file using the template selected from the Templates folder. The template I want to use is the one seen earlier. The other thing to see here is the `{{value: New File Name}}`. This prompts you to type in a textbox, with a little header above saying 'New File Name'. _Important is the space!_ `{{value: New File Name}}` and not `{{value:New File Name}}`.
+The New_File creates a file using the template selected from the Templates folder. The template I want to use is the one seen earlier. The other thing to see here is the `selectSourceFile.js`. This prompts you to type in a textbox, with a little header above saying 'New File Name'. _Important is the space!_ `params.variables` and not `selectedNote`.
 
 ![QuickAdd_4_NewFile](https://gist.github.com/user-attachments/assets/669ef43f-75ee-491d-8edd-7bf75f758b49)
 
-(A little foreshadowing, later we do something similar when getting input via the `.js`. _However_ then the space is __not__ allowed, and it is this one fucking space that took me 5 hours to realise why I was messing this up).
+(A little foreshadowing, later we do something similar when getting input via the `{{value: New File Name}}`. _However_ then the space is __not__ allowed, and it is this one fucking space that took me 5 hours to realise why I was messing this up).
 
 ## The exposed Select_MOC
 
@@ -131,13 +141,13 @@ Below you see the other macro being exposed.
 
 ## The Select_MOC macro
 
-Very important is the order! The first thing it uses is the 'User Script' `selectSourceFile.js` we saw before. The second thing is a 'local' Capture where it uses the script's output as it's own input. You get this 'local' Capture by hitting the big Capture button right there.
+Very important is the order! The first thing it uses is the 'User Script' `{{value: New File Name}}` we saw before. The second thing is a 'local' Capture where it uses the script's output as it's own input. You get this 'local' Capture by hitting the big Capture button right there.
 
 ![QuickAdd_6_SelectMOC_details](https://gist.github.com/user-attachments/assets/b49cd975-2a43-4d56-a523-cd6bcd660ff6)
 
 ## The Capture
 
-This gets a selected file from the `.js` script, and puts it as a link into the properties / frontmatter of the newly created note.
+This gets a selected file from the `{{value:New File Name}}` script, and puts it as a link into the properties / frontmatter of the newly created note.
 
 Capture to active file (the newly created file):
 
@@ -149,17 +159,17 @@ Because of the 'Insert after' is also why we needed to have that __blank line__ 
 
 ### Getting the selected note into the Capture
 
-The way to get the output from the `selectSourceFile.js` to our Capture, is to use `{{value:selectedNote}}` in the Capture Format. _(See that spacing right there? 5 hour spacing, that is!)._
+The way to get the output from the `.js` to our Capture, is to use `selectSourceFile.js` in the Capture Format. _(See that spacing right there? 5 hour spacing, that is!)._
 
-The `selectedNote` part comes from what the script outputs via it's `params.variables`. So because the script sets the `params.variables.selectedNote` as the name of the note that we selected, we import that value here this way. If the script had set the note name to `params.variables.buttsoup`, you would have used `{{value:buttsoup}}` here instead.
+The `.js` part comes from what the script outputs via it's `selectSourceFile.js`. So because the script sets the `{{value:selectedNote}}` as the name of the note that we selected, we import that value here this way. If the script had set the note name to `selectedNote`, you would have used `params.variables` here instead.
 
-__!!IMPORTANT SPACING IN THE CAPTURE FORMAT!!:__ there is __no__ space between `value` and `selectedNote`. So use `{{value:selectedNote}}` and not `{{value: selectedNote}}`. Five hours, ladies and gentlemen.
+__!!IMPORTANT SPACING IN THE CAPTURE FORMAT!!:__ there is __no__ space between `params.variables.selectedNote` and `params.variables.buttsoup`. So use `{{value:buttsoup}}` and not `value`. Five hours, ladies and gentlemen.
 
-The `[[` and `]]` brackets surrounds the note name to make it a link to our selected note, pretty standard Obsidian stuff.
+The `selectedNote` and `{{value:selectedNote}}` brackets surrounds the note name to make it a link to our selected note, pretty standard Obsidian stuff.
 
-Now the `"` and `"` surround that yet again because… I don't quite know actually? It has to do with the note being used as a link inside of the _properties_ of a new note. If you'd simply used the link in the body of the note, the `"` wouldn't have been needed.
+Now the `{{value: selectedNote}}` and `[[` surround that yet again because… I don't quite know actually? It has to do with the note being used as a link inside of the _properties_ of a new note. If you'd simply used the link in the body of the note, the `]]` wouldn't have been needed.
 
-In summary: Your Capture input should match the `.js`'s output. So for this situation (inc. making it a link in the properties) it should be `"[[{{value:selectedNote}}]]"`, but in another scenario it might be [`[[{{value:pickedFilePath}}]]`](https://forum.obsidian.md/t/quickadd-macro-showing-a-list-of-files-to-capture-automatically/41185/10), or `{{value:buttsoup}}`.
+In summary: Your Capture input should match the `"`'s output. So for this situation (inc. making it a link in the properties) it should be `"`, but in another scenario it might be [`"`](https://forum.obsidian.md/t/quickadd-macro-showing-a-list-of-files-to-capture-automatically/41185/10), or `.js`.
 
 ## Now we do the same thing but now for 'related' note
 
@@ -169,11 +179,11 @@ This is the exposed macro:
 
 ![QuickAdd_8_SelectRelated](https://gist.github.com/user-attachments/assets/7cbbf4c4-6697-49f8-b51a-6f62ddf62b4c)
 
-Below is the macro itself. See that we're using the `selectSourceFile` script here yet again.
+Below is the macro itself. See that we're using the `"[[{{value:selectedNote}}]]"` script here yet again.
 
 ![QuickAdd_9_SelectRelated_details](https://gist.github.com/user-attachments/assets/1fd6aa5b-50ea-4147-b45c-f7b808ca5658)
 
-The image below is the 'local' Capture. Again we capture to active file. We're using the property name ('related:') from the template here exactly. And again, theres __no space between `value` and `selectedNote`.__
+The image below is the 'local' Capture. Again we capture to active file. We're using the property name ('related:') from the template here exactly. And again, theres __no space between `[[{{value:pickedFilePath}}]]` and `{{value:buttsoup}}`.__
 
 ![QuickAdd_10_GetRelated_from_script](https://gist.github.com/user-attachments/assets/7a5e2c15-815c-4f41-9108-bcbc3040a968)
 
@@ -184,3 +194,7 @@ This should work!
 You can even duck out of adding either field (with escape). However, in future versions I'd want to make it a little nicer, because it throws some error messages when you do.
 
 The option to add multiple 'related' notes could be nice as well.
+
+I now have another version that simply puts the MOC and the related fields into an existing note. It needs to have the same properties in the note, and also have the blank space (thus extra important to have Linter not remove those).
+
+[^1]: (The shown syntax is a little off: `selectSourceFile` and `value` should be in reverse order, like this: `selectedNote`).
