@@ -1,0 +1,1 @@
+# Obsidian_QuickAdd_JavaScript
