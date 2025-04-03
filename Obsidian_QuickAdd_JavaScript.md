@@ -1,11 +1,12 @@
 ---
+media_link: 
 tags: []
 MOC:
   - "[[Obsidian_2025_revamp]]"
 related:
   - "[[Obsidian_ricing]]"
 date_created: 2025-03-24
-date_modified: 2025-03-26
+date_modified: 2025-03-31
 links:
   - "[Github Repo](https://github.com/mrstruijk/Obsidian_QuickAdd_JavaScript)"
 ---
@@ -61,7 +62,7 @@ Stored somewhere in the Obsidian vault. Put it in a 'Scripts' folder for all I c
 
 Mine is called [[selectSourceFile.js]]
 
-``` javascript
+```javascript
 module.exports = async function(params) {
   // Debug notification to confirm script is running
   // new Notice("Script started");
