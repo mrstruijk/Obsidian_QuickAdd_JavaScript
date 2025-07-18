@@ -2,7 +2,7 @@
 media_link: 
 tags: []
 MOC:
-  - "[[Obsidian_2025_revamp]]"
+  - "[[MOC-Obsidian_2025_revamp]]"
 related:
   - "[[Obsidian_ricing]]"
 date_created: 2025-03-24
